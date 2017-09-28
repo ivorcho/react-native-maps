@@ -7,7 +7,6 @@ import {
 } from 'react-native';
 
 import MapView from 'react-native-maps';
-import PanController from './PanController';
 import PriceMarker from './AnimatedPriceMarker';
 
 const screen = Dimensions.get('window');

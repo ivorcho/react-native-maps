@@ -20,7 +20,8 @@ target 'AirMapsExplorer' do
     'RCTText',
     'RCTVibration',
     'RCTWebSocket',
-    'BatchedBridge'
+    'BatchedBridge',
+    'DevSupport'
   ]
 
   pod 'GoogleMaps'  # Remove this line if you don't want to support GoogleMaps on iOS
@@ -35,7 +36,6 @@ post_install do |installer|
         config.build_settings['CLANG_ENABLE_MODULES'] = 'No'
       end
     end
-    
     if target.name == "React"
       target.remove_from_project
     end
