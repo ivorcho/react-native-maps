@@ -37,12 +37,12 @@ public class AirMapHeatMapManager extends ViewGroupManager<AirMapHeatMap> {
   }
 
   @ReactProp(name = "coordinates")
-  public void setCoordinate(AirMapPolygon view, ReadableArray coordinates) {
+  public void setCoordinate(AirMapHeatMap view, ReadableArray coordinates) {
     view.setCoordinates(coordinates);
   }
 
   @ReactProp(name = "zIndex", defaultFloat = -1.0f)
-  public void setZIndex(AirMapUrlTile view, float zIndex) {
+  public void setZIndex(AirMapHeatMap view, float zIndex) {
     view.setZIndex(zIndex);
   }
 }
