@@ -21,6 +21,8 @@ public class AirMapHeatMap extends AirMapFeature {
   private TileOverlayOptions tileOverlayOptions;
   private HeatmapTileProvider tileProvider;
 
+  private double opacity;
+  private int radius;
   private float zIndex;
   private List<WeightedLatLng> coordinates;
 
@@ -45,6 +47,26 @@ public class AirMapHeatMap extends AirMapFeature {
     }
   }
 
+  public void setOpacity(double opacity) {
+    this.opacity = opacity;
+    if (tileProvider != null) {
+      tileProvider.setOpacity(opacity);
+    }
+    if (tileOverlay != null) {
+      tileOverlay.clearTileCache();
+    }
+  }
+
+  public void setRadius(int radius) {
+    this.radius = radius;
+    if (tileProvider != null) {
+      tileProvider.setRadius(radius);
+    }
+    if (tileOverlay != null) {
+      tileOverlay.clearTileCache();
+    }
+  }
+
   public void setZIndex(float zIndex) {
     this.zIndex = zIndex;
     if (tileOverlay != null) {
@@ -62,7 +84,11 @@ public class AirMapHeatMap extends AirMapFeature {
   private TileOverlayOptions createTileOverlayOptions() {
     TileOverlayOptions options = new TileOverlayOptions();
     options.zIndex(zIndex);
-    this.tileProvider = new HeatmapTileProvider.Builder().weightedData(this.coordinates).build();
+    this.tileProvider = new HeatmapTileProvider.Builder()
+        .weightedData(this.coordinates)
+        .opacity(this.opacity)
+        .radius(this.radius)
+        .build();
     options.tileProvider(this.tileProvider);
     return options;
   }

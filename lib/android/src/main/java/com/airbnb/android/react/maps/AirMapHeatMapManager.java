@@ -37,7 +37,7 @@ public class AirMapHeatMapManager extends ViewGroupManager<AirMapHeatMap> {
   }
 
   @ReactProp(name = "coordinates")
-  public void setCoordinate(AirMapHeatMap view, ReadableArray coordinates) {
+  public void setCoordinates(AirMapHeatMap view, ReadableArray coordinates) {
     view.setCoordinates(coordinates);
   }
 
@@ -45,4 +45,15 @@ public class AirMapHeatMapManager extends ViewGroupManager<AirMapHeatMap> {
   public void setZIndex(AirMapHeatMap view, float zIndex) {
     view.setZIndex(zIndex);
   }
+
+  @ReactProp(name = "opacity", defaultFloat = 0.7f)
+  public void setOpacity(AirMapHeatMap view, double opacity) {
+    view.setOpacity(opacity);
+  }
+
+  @ReactProp(name = "radius", defaultInt = 10)
+  public void setRadius(AirMapHeatMap view, int radius) {
+    view.setRadius(radius);
+  }
+
 }
