@@ -27,6 +27,9 @@ RCT_EXPORT_VIEW_PROPERTY(coordinates, AIRMapCoordinateArray)
 RCT_EXPORT_VIEW_PROPERTY(zIndex, int)
 RCT_EXPORT_VIEW_PROPERTY(opacity, float)
 RCT_EXPORT_VIEW_PROPERTY(radius, int)
+RCT_EXPORT_VIEW_PROPERTY(gradientSteps, NSNumberArray)
+RCT_EXPORT_VIEW_PROPERTY(gradientColors, UIColorArray)
+RCT_EXPORT_VIEW_PROPERTY(defaultColor, UIColor)
 
 @end
 
