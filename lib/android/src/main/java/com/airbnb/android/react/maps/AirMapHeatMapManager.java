@@ -1,6 +1,7 @@
 package com.airbnb.android.react.maps;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Build;
 import android.util.DisplayMetrics;
 import android.view.WindowManager;
@@ -56,4 +57,18 @@ public class AirMapHeatMapManager extends ViewGroupManager<AirMapHeatMap> {
     view.setRadius(radius);
   }
 
+  @ReactProp(name = "gradientSteps")
+  public void setGradientSteps(AirMapHeatMap view, ReadableArray steps) {
+    view.setGradientSteps(steps);
+  }
+
+  @ReactProp(name = "gradientColors", customType = "ColorArray")
+  public void setGradientColors(AirMapHeatMap view, ReadableArray colors) {
+    view.setGradientColors(colors);
+  }
+
+  @ReactProp(name = "defaultColor", defaultInt = Color.TRANSPARENT, customType = "Color")
+  public void setDefaultColor(AirMapHeatMap view, int color) {
+    view.setDefaultColor(color);
+  }
 }

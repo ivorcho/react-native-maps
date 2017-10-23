@@ -1,6 +1,7 @@
 package com.airbnb.android.react.maps;
 
 import android.content.Context;
+import android.graphics.Color;
 
 import com.facebook.react.bridge.ReadableArray;
 import com.facebook.react.bridge.ReadableMap;
@@ -8,8 +9,6 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.TileOverlay;
 import com.google.android.gms.maps.model.TileOverlayOptions;
-import com.google.android.gms.maps.model.TileProvider;
-import com.google.maps.android.heatmaps.HeatmapTileProvider;
 import com.google.maps.android.heatmaps.WeightedLatLng;
 
 import java.util.ArrayList;
@@ -24,6 +23,16 @@ public class AirMapHeatMap extends AirMapFeature {
   private double opacity;
   private int radius;
   private float zIndex;
+  private Gradient gradient = HeatmapTileProvider.DEFAULT_GRADIENT;
+  private float[] gradientSteps = {
+          0.2f, 1f
+  };
+  private int[] gradientColors = {
+          Color.rgb(102, 225, 0),
+          Color.rgb(255, 0, 0)
+  };
+  private int maxIntensity = 0;
+  private int gradientInitialColor = Color.TRANSPARENT;
   private List<WeightedLatLng> coordinates;
 
   public AirMapHeatMap(Context context) {
@@ -74,6 +83,41 @@ public class AirMapHeatMap extends AirMapFeature {
     }
   }
 
+  public void setGradientSteps(ReadableArray steps) {
+    maxIntensity = steps.getInt(steps.size() - 1);
+    gradientSteps = new float[steps.size()];
+    for (int i = 0; i < steps.size(); i++) {
+      gradientSteps[i] = (float)steps.getInt(i) / (float)maxIntensity;
+    }
+    if (tileProvider != null) {
+      tileProvider.setMaxIntensity(maxIntensity);
+    }
+    updateTiles();
+  }
+
+  public void setGradientColors(ReadableArray colors) {
+    gradientColors = new int[colors.size()];
+    for (int i = 0; i < colors.size(); i++) {
+      gradientColors[i] = colors.getInt(i);
+    }
+    updateTiles();
+  }
+
+  public void setDefaultColor(int color) {
+    gradientInitialColor = color;
+    updateTiles();
+  }
+
+  private void updateTiles() {
+    gradient = new Gradient(gradientColors, gradientSteps, 1000, gradientInitialColor);
+    if (tileProvider != null) {
+      tileProvider.setGradient(gradient);
+    }
+    if (tileOverlay != null) {
+      tileOverlay.clearTileCache();
+    }
+  }
+
   public TileOverlayOptions getTileOverlayOptions() {
     if (tileOverlayOptions == null) {
       tileOverlayOptions = createTileOverlayOptions();
@@ -88,6 +132,8 @@ public class AirMapHeatMap extends AirMapFeature {
         .weightedData(this.coordinates)
         .opacity(this.opacity)
         .radius(this.radius)
+        .gradient(gradient)
+        .maxIntensity(maxIntensity)
         .build();
     options.tileProvider(this.tileProvider);
     return options;
