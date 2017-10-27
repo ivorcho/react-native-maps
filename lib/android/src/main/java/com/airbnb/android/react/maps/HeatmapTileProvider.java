@@ -352,6 +352,15 @@ public class HeatmapTileProvider implements TileProvider {
         // Each zoom level multiplies number of tiles by 2
         // Width of the world = WORLD_WIDTH = 1
         // x = [0, 1) corresponds to [-180, 180)
+        int radius = mRadius;
+        double[] kernel = mKernel;
+        if (zoom == 14) {
+            radius = mRadius - 15;
+            kernel = generateKernel(radius, radius / 3.0);
+        } else if (zoom < 14) {
+            radius = mRadius - 25;
+            kernel = generateKernel(radius, radius / 3.0);
+        }
 
         // calculate width of one tile, given there are 2 ^ zoom tiles in that zoom level
         // In terms of world width units
@@ -360,7 +369,7 @@ public class HeatmapTileProvider implements TileProvider {
         // how much padding to include in search
         // is to tileWidth as mRadius (padding in terms of pixels) is to TILE_DIM
         // In terms of world width units
-        double padding = tileWidth * mRadius / TILE_DIM;
+        double padding = tileWidth * radius / TILE_DIM;
 
         // padded tile width
         // In terms of world width units
@@ -368,7 +377,7 @@ public class HeatmapTileProvider implements TileProvider {
 
         // padded bucket width - divided by number of buckets
         // In terms of world width units
-        double bucketWidth = tileWidthPadded / (TILE_DIM + mRadius * 2);
+        double bucketWidth = tileWidthPadded / (TILE_DIM + radius * 2);
 
         // Make bounds: minX, maxX, minY, maxY
         double minX = x * tileWidth - padding;
@@ -407,7 +416,7 @@ public class HeatmapTileProvider implements TileProvider {
         Collection<WeightedLatLng> points = mTree.search(tileBounds);
 
         // Quantize points
-        double[][] intensity = new double[TILE_DIM + mRadius * 2][TILE_DIM + mRadius * 2];
+        double[][] intensity = new double[TILE_DIM + radius * 2][TILE_DIM + radius * 2];
         for (WeightedLatLng w : points) {
             Point p = w.getPoint();
             int bucketX = (int) ((p.x - minX) / bucketWidth);
@@ -423,7 +432,7 @@ public class HeatmapTileProvider implements TileProvider {
         }
 
         // Convolve it ("smoothen" it out)
-        double[][] convolved = convolve(intensity, mKernel);
+        double[][] convolved = convolve(intensity, kernel);
 
         // Color it into a bitmap
         Bitmap bitmap = colorize(convolved, mColorMap, mMaxIntensity);
