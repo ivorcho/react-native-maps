@@ -10,7 +10,7 @@
 @interface AIRGoogleMapHeatMap : UIView
 
 @property (nonatomic, strong) GMUHeatmapTileLayer *tileLayer;
-@property (nonatomic, strong) NSArray<AIRMapCoordinate *> *coordinates;
+@property (nonatomic, strong) NSArray<NSDictionary *> *coordinates;
 @property (nonatomic, assign) int zIndex;
 @property (nonatomic, assign) float opacity;
 @property (nonatomic, assign) int radius;

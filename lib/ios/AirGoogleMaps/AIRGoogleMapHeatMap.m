@@ -88,14 +88,19 @@
   }
 }
 
-- (void)setCoordinates:(NSArray<AIRMapCoordinate *> *)coordinates
+- (void)setCoordinates:(NSArray<NSDictionary *> *)coordinates
 {
   _coordinates = coordinates;
   
   NSMutableArray<GMUWeightedLatLng *> * data = [NSMutableArray arrayWithCapacity:coordinates.count];
   for(int i = 0; i < coordinates.count; i++)
   {
-    [data addObject:[[GMUWeightedLatLng alloc] initWithCoordinate:coordinates[i].coordinate intensity:1.0]];
+    CLLocationCoordinate2D point;
+    point.latitude = [coordinates[i][@"latitude"] doubleValue];
+    point.longitude = [coordinates[i][@"longitude"] doubleValue];
+    float intensity = [coordinates[i][@"intensity"] floatValue];
+    
+    [data addObject:[[GMUWeightedLatLng alloc] initWithCoordinate:point intensity:intensity]];
   }
   
   if (_tileLayer == NULL) {
@@ -106,7 +111,6 @@
     _tileLayer.gradient = _gradient;
     _tileLayer.weightedData = data;
   } else {
-    NSLog(@"Clearing tile data");
     _tileLayer.weightedData = data;
     [_tileLayer clearTileCache];
   }

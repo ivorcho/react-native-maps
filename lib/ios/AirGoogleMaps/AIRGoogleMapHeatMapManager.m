@@ -23,7 +23,7 @@ RCT_EXPORT_MODULE()
   return tileLayer;
 }
 
-RCT_EXPORT_VIEW_PROPERTY(coordinates, AIRMapCoordinateArray)
+RCT_EXPORT_VIEW_PROPERTY(coordinates, NSDictionaryArray)
 RCT_EXPORT_VIEW_PROPERTY(zIndex, int)
 RCT_EXPORT_VIEW_PROPERTY(opacity, float)
 RCT_EXPORT_VIEW_PROPERTY(radius, int)
