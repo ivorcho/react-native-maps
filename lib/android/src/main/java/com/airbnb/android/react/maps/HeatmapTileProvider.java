@@ -66,7 +66,7 @@ public class HeatmapTileProvider implements TileProvider {
     /**
      * Tile dimension, in pixels.
      */
-    private static final int TILE_DIM = 512;
+    private static final int TILE_DIM = 256;
 
     /**
      * Assumed screen size (pixels)
@@ -142,6 +142,8 @@ public class HeatmapTileProvider implements TileProvider {
      * Maximum intensity estimates for heatmap
      */
     private int mMaxIntensity;
+
+    private Tile mEmptyTile;
 
     /**
      * Builder class for the HeatmapTileProvider.
@@ -338,6 +340,23 @@ public class HeatmapTileProvider implements TileProvider {
         return weightedData;
     }
 
+    private Tile getEmptyTile() {
+        if (mGradient.getInitialColor() == Color.TRANSPARENT) {
+            return TileProvider.NO_TILE;
+        }
+        if (mEmptyTile == null) {
+            Bitmap emptyTileBitmap = Bitmap.createBitmap(TILE_DIM, TILE_DIM, Bitmap.Config.ARGB_8888);
+            int c = mGradient.getInitialColor();
+            if (mOpacity != 1) {
+                c = Color.argb((int) (Color.alpha(c) * mOpacity),
+                        Color.red(c), Color.green(c), Color.blue(c));
+            }
+            emptyTileBitmap.eraseColor(c);
+            mEmptyTile = convertBitmap(emptyTileBitmap);
+        }
+        return mEmptyTile;
+    }
+
     /**
      * Creates tile.
      *
@@ -355,10 +374,10 @@ public class HeatmapTileProvider implements TileProvider {
         int radius = mRadius;
         double[] kernel = mKernel;
         if (zoom == 14) {
-            radius = mRadius - 15;
+            radius = mRadius - 6;
             kernel = generateKernel(radius, radius / 3.0);
         } else if (zoom < 14) {
-            radius = mRadius - 25;
+            radius = mRadius - 13;
             kernel = generateKernel(radius, radius / 3.0);
         }
 
@@ -411,9 +430,19 @@ public class HeatmapTileProvider implements TileProvider {
 
         // Main tile bounds to search
         Bounds tileBounds = new Bounds(minX, maxX, minY, maxY);
+        Bounds paddedBounds = new Bounds(mBounds.minX - padding, mBounds.maxX + padding,
+                mBounds.minY - padding, mBounds.maxY + padding);
+        if (!tileBounds.intersects(paddedBounds)) {
+            return getEmptyTile();
+        }
 
         // Search for all points within tile bounds
         Collection<WeightedLatLng> points = mTree.search(tileBounds);
+
+        if (points.isEmpty()) {
+            return getEmptyTile();
+        }
+
 
         // Quantize points
         double[][] intensity = new double[TILE_DIM + radius * 2][TILE_DIM + radius * 2];
