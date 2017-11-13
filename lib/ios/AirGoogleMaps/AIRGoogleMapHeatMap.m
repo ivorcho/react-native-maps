@@ -50,6 +50,10 @@
   }
   _gradientSteps = [newGradientSteps copy];
   
+  if (_gradientSteps.count != _gradientColors.count) {
+    return;
+  }
+  
   _gradient = [[GMUGradient alloc] initWithColors:_gradientColors
                                       startPoints:_gradientSteps
                                      defaultColor:_defaultColor
@@ -65,6 +69,9 @@
 - (void)setGradientColors:(NSArray<UIColor *> *)gradientColors
 {
   _gradientColors = gradientColors;
+  if (_gradientSteps.count != _gradientColors.count) {
+    return;
+  }
   _gradient = [[GMUGradient alloc] initWithColors:_gradientColors
                                       startPoints:_gradientSteps
                                      defaultColor:_defaultColor

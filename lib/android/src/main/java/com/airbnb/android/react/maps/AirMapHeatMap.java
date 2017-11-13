@@ -92,7 +92,9 @@ public class AirMapHeatMap extends AirMapFeature {
     if (tileProvider != null) {
       tileProvider.setMaxIntensity(maxIntensity);
     }
-    updateTiles();
+    if (gradientSteps.length == gradientColors.length) {
+      updateTiles();
+    }
   }
 
   public void setGradientColors(ReadableArray colors) {
@@ -100,7 +102,9 @@ public class AirMapHeatMap extends AirMapFeature {
     for (int i = 0; i < colors.size(); i++) {
       gradientColors[i] = colors.getInt(i);
     }
-    updateTiles();
+    if (gradientSteps.length == gradientColors.length) {
+      updateTiles();
+    }
   }
 
   public void setDefaultColor(int color) {
