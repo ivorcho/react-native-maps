@@ -91,7 +91,7 @@ public class Gradient {
             throw new IllegalArgumentException("No colors have been defined");
         }
         for (int i = 1; i < startPoints.length; i++) {
-            if (startPoints[i] <= startPoints[i - 1]) {
+            if (startPoints[i] < startPoints[i - 1]) {
                 throw new IllegalArgumentException("startPoints should be in increasing order");
             }
         }
@@ -119,7 +119,7 @@ public class Gradient {
             throw new IllegalArgumentException("No colors have been defined");
         }
         for (int i = 1; i < startPoints.length; i++) {
-            if (startPoints[i] <= startPoints[i - 1]) {
+            if (startPoints[i] < startPoints[i - 1]) {
                 throw new IllegalArgumentException("startPoints should be in increasing order");
             }
         }
