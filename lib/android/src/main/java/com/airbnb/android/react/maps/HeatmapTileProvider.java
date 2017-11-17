@@ -430,10 +430,10 @@ public class HeatmapTileProvider implements TileProvider {
 
         // Main tile bounds to search
         Bounds tileBounds = new Bounds(minX, maxX, minY, maxY);
-        Bounds paddedBounds = new Bounds(mBounds.minX - padding, mBounds.maxX + padding,
-                mBounds.minY - padding, mBounds.maxY + padding);
+        Bounds paddedBounds = new Bounds(mBounds.minX - padding*8, mBounds.maxX + padding*8,
+                mBounds.minY - padding*8, mBounds.maxY + padding*8);
         if (!tileBounds.intersects(paddedBounds)) {
-            return getEmptyTile();
+            return TileProvider.NO_TILE;
         }
 
         // Search for all points within tile bounds
